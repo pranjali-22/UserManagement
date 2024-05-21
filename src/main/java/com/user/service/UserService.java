@@ -19,5 +19,16 @@ public class UserService {
     public Userentity getUserByEmail(String email) {
         return userDao.findUserByEmail(email);
     }
+    public String addUser(Userentity userentity) {
+        userDao.save(userentity);
+        return "success";
+    }
+    @Transactional
+    public String deleteUserByEmail(String email) {
+        userDao.deleteByEmail(email);
+        return "success";
+    }
+
+
 
 }

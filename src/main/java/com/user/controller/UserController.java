@@ -20,10 +20,20 @@ public class UserController {
         return userService.getAllUsers();
     }
     @GetMapping("email/{email}")
-    //add @PathVariable annotation to pass {email} as the variable in the function
     public Userentity getUserByEmail(@PathVariable String email){
         return userService.getUserByEmail(email);
     }
+    @PostMapping("add")
+    public String addUser(@RequestBody Userentity userentity) {
+        return userService.addUser(userentity);
+    }
+    @Transactional
+    @DeleteMapping("delete/{email}")
+    public String deleteUser(@PathVariable String email) {
+        return userService.deleteUserByEmail(email);
+    }
+
+
 
 
 }
