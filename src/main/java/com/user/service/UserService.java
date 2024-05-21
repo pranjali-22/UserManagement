@@ -16,4 +16,8 @@ public class UserService {
     public List<Userentity> getAllUsers() {
         return userDao.findAll();
     }
+    public Userentity getUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
+    }
+
 }
