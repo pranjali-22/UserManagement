@@ -5,6 +5,7 @@ import com.user.dao.UserDao;
 import com.user.model.Userentity;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,11 @@ public class UserService {
         return userDao.findUserByEmail(email);
     }
     public String addUser(Userentity userentity) {
+        userDao.save(userentity);
+        return "success";
+    }
+    @Modifying
+    public String updateUser(Userentity userentity){
         userDao.save(userentity);
         return "success";
     }
