@@ -1,7 +1,9 @@
 package com.user.controller;
 
 
-import com.user.model.Userentity;
+import com.user.exceptions.InvalidDataException;
+import com.user.exceptions.UserNotFoundException;
+import com.user.model.Userprofile;
 import com.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,41 +21,27 @@ public class UserController {
     UserService userService;
 
     @GetMapping("/allUsers")
-    public ResponseEntity<List<Userentity>> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<Userprofile>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
     @GetMapping("email/{email}")
-    public ResponseEntity<Userentity> getUserByEmail(@PathVariable String email){
-        return userService.getUserByEmail(email);
+    public ResponseEntity<Userprofile> getUserByEmail(@PathVariable String email) {
+        try {
+            return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
+        } catch (InvalidDataException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     @PostMapping("add")
-    public ResponseEntity<String> addUser(@RequestBody Userentity userentity) {
-        return userService.addUser(userentity);
+    public ResponseEntity<String> addUser(@RequestBody Userprofile userProfile) {
+        return userService.addUser(userProfile);
     }
     @Modifying
-    @PutMapping("update/email/{email}")
-    public String updateEmail(@RequestBody String inputEmail,@PathVariable String email){
-        Userentity ue = userService.getUserByEmail(email).getBody();
-        ue.setEmail(inputEmail);
-        return userService.updateUser(ue);
-    }
-    @PutMapping("update/name/{email}")
-    public String updateName(@RequestBody String name,@PathVariable String email){
-        Userentity ue = userService.getUserByEmail(email).getBody();
-        ue.setName(name);
-        return userService.updateUser(ue);
-    }
-    @PutMapping("update/dob/{email}")
-    public String updateDate(@RequestBody Date date, @PathVariable String email){
-        Userentity ue = userService.getUserByEmail(email).getBody();
-        ue.setDob(date);
-        return userService.updateUser(ue);
-    }
-    @PutMapping("update/phone/{email}")
-    public String updatePhone(@RequestBody String phone, @PathVariable String email){
-        Userentity ue = userService.getUserByEmail(email).getBody();
-        ue.setPhone(phone);
-        return userService.updateUser(ue);
+    @PutMapping("update/{email}")
+    public String updateUser(@PathVariable String email, @RequestBody Userprofile userProfile) {
+        return userService.updateUser(email, userProfile);
     }
     @Transactional
     @DeleteMapping("delete/{email}")

@@ -1,15 +1,20 @@
 package com.user.dao;
 
 
-import com.user.model.Userentity;
+import com.user.model.Userprofile;
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface UserDao extends JpaRepository<Userentity, String> {
-    public Userentity findUserByEmail(String email);
+@Configuration
+public interface UserDao extends JpaRepository<Userprofile, String> {
+    public List<Userprofile> findAllUserByEmail(String email);
+    public Userprofile findByEmail(String email);
+    public Userprofile findAllById(Integer id);
     @Transactional
     void deleteByEmail(String email);
 
